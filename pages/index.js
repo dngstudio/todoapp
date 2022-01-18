@@ -35,12 +35,22 @@ const theme = createTheme({
 export default function Home() {
 
   const [zadaci, setZadaci] = useState([])
+  const [input, setInput] = useState("")
+
+  const handleChange = (event) => {
+    setInput(event.target.value)
+  }
 
   const handleKeyDown = (event) => {
     const newArr = []
-    if (event.key === 'Enter') {
+    
+    if (event.key === 'Enter' && input.length > 0) {
+
+      
+      
       setZadaci(() => {
-        newArr = [...zadaci, <Todo todoText={event.target.value} handleDelete={handleDelete}/>]
+        newArr = [...zadaci, <Todo  todoText={input} handleDelete={() => handleDelete()}/>]
+        setInput("")
         return newArr
       })
      
@@ -65,7 +75,7 @@ const handleDelete = () => {
         <ThemeProvider theme={theme}>
           <Typography align="center" variant="h1" color="primary" fontWeight="bold" sx={{ mt: 5 }}>Todo</Typography>
           <Card  variant="outlined" sx={{ mt: 3, bgcolor: 'primary.light', p: 3 }}>
-            <Input placeholder="Upiši zadatak" align="center" fullWidth style={{color:"#CFD8DC"}} onKeyDown={handleKeyDown}  />
+            <Input onChange={handleChange} value={input} placeholder="Upiši zadatak" align="center" fullWidth style={{color:"#CFD8DC"}} onKeyDown={handleKeyDown}  />
           </Card>
 
         <Card  variant="outlined" sx={{ mt: 3, bgcolor: 'primary.light', pb: 3 , pt:2, px:3}}>
