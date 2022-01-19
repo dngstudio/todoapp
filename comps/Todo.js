@@ -42,8 +42,8 @@ const trashStyle = {
             onMouseEnter = {onEnter}
             onMouseLeave = {onLeave}
             variant="p"
-            color="primary"
-           
+            color= {hovered ? "success.main" : "primary"}
+            
             >
             {props.todoText}
             </Typography>

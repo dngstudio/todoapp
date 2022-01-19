@@ -10,7 +10,7 @@ import { createTheme } from '@mui/material/styles';
 import { color, ThemeProvider } from '@mui/system';
 import Todo from '../comps/Todo';
 import data from './api/hello'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const theme = createTheme({
   palette: {
@@ -28,38 +28,65 @@ const theme = createTheme({
     },
     warning: {
       main: "#EF5350"
+    },
+    success: {
+      main: "#90A4AE"
     }
   },
 });
 
 export default function Home() {
 
-  const [zadaci, setZadaci] = useState([])
-  const [input, setInput] = useState("")
+  
 
-  const handleChange = (event) => {
-    setInput(event.target.value)
-  }
+const [zadaci, setZadaci] = useState([])
+const [input, setInput] = useState("")
+const [obrisano, setObrisano] = useState(false)
 
-  const handleKeyDown = (event) => {
-    const newArr = []
-    
-    if (event.key === 'Enter' && input.length > 0) {
 
-      
-      
-      setZadaci(() => {
-        newArr = [...zadaci, <Todo  todoText={input} handleDelete={() => handleDelete()}/>]
-        setInput("")
-        return newArr
-      })
-     
-    }
-  }
+
+const handleChange = (event) => {
+  setInput(event.target.value)
+}
+
+const handleKeyDown = (event) => {
+  const newArr = []
+  
+  if (event.key === 'Enter' && input.length > 0) {
 
   
-const handleDelete = () => {
-  console.log(zadaci)
+    
+    setZadaci((prevZadaci) => {
+
+      let redniBroj = 1
+      while (redniBroj <= prevZadaci.length) {
+        redniBroj = redniBroj + 1
+      }
+
+      let todoComp = <Todo value={input} key={redniBroj} todoText={`${redniBroj}. ${input}`} handleDelete={() => deleteTodo(input)}/>
+
+      newArr = [...prevZadaci, todoComp]
+      setInput("")
+      
+      return newArr
+    })
+    
+  }
+  
+}
+
+  
+const deleteTodo = (data) => {
+  const newArrTwo = []
+
+  setZadaci(prevZadaci => {
+
+    
+
+    newArrTwo = [...prevZadaci, data]
+    return newArrTwo
+  })
+  
 }
 
 
@@ -81,7 +108,7 @@ const handleDelete = () => {
         <Card  variant="outlined" sx={{ mt: 3, bgcolor: 'primary.light', pb: 3 , pt:2, px:3}}>
           {zadaci}
         </Card>
-        
+     
         </ThemeProvider>
         
 
