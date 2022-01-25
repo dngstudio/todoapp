@@ -1,13 +1,16 @@
 
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { Box } from '@mui/system';
-
+import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { borderBottom, Box, height } from '@mui/system';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Todo = (props) => {
 
 const [hovered, setHovered] = useState(false)
+const [editable, setEditable] = useState(false)
 
 const onEnter = () => {
     setHovered(prevHovered => !prevHovered)
@@ -21,38 +24,56 @@ const handleClick = () => {
     setHovered(prevHovered => !prevHovered)
 }
 
+const handleEdit = () => {
+    setEditable(prevEditable => !prevEditable)
+}
 
 const style = {
-    textDecoration: hovered ? "line-through" : "none",
-    cursor:"pointer"
+    textDecoration: hovered && !editable ? "line-through" : "none",
+    cursor: editable ? "text" : "pointer"
+}
+
+const iconDeleteButtonStyle = {
+    display: hovered ? "inline-flex" : "none",
+    marginLeft: "10px"
+}
+
+const iconEditButtonStyle = {
+    display: hovered ? "inline-flex" : "none"
 }
 
 const trashStyle = {
-    opacity: hovered ? "1" : "0",
-    width: "20px",
-    position: "relative",
-    
+    position: "absolute"
 }
 
+const editStyle = {
+    position: "absolute"
+}
+
+
     return ( 
-        <Box  sx={{ mt:1, display: 'flex', justifyContent: 'space-between'}}>
+        <Box   sx={{ my:1, display: 'flex', justifyContent: 'space-between'} } onMouseEnter = {onEnter} onMouseLeave = {onLeave}>
             <Typography
             style={style}
             onClick = {handleClick}
-            onMouseEnter = {onEnter}
-            onMouseLeave = {onLeave}
             variant="p"
-            color= {hovered ? "success.main" : "primary"}
-            
+            color= {hovered && !editable ? "success.main" : "primary"}
+            direction="column"
+            justifyContent="center"
+            contenteditable = {editable ? "true" : "false"}
             >
             {props.todoText}
             </Typography>
 
-            <DeleteOutlineOutlinedIcon
-                color='warning'
-                style={trashStyle}
-                onClick={props.handleDelete}
-            />
+            <Box>
+                <IconButton style={iconEditButtonStyle} onClick={handleEdit}>
+                    {editable ? <CheckIcon color='primary' style={editStyle} /> : <EditIcon color='primary' style={editStyle} />}
+                </IconButton>
+                <IconButton aria-label="delete" value={props.trashValue} onClick={props.handleDelete} style={iconDeleteButtonStyle}>
+                <DeleteIcon color='warning' style={trashStyle} />
+                </IconButton>
+            </Box>
+
         </Box>
      );
 }
